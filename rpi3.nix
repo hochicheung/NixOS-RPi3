@@ -1,4 +1,5 @@
 { config, pkgs, lib, ... }:
+
 {
 	boot.loader.grub.enable = false;
 
