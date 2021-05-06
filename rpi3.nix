@@ -13,21 +13,21 @@
 
 	# File systems configuration for using the installer's partition layout
 	fileSystem = {
-	  "/" = {
-		  device = "/dev/disk/by-label/NIXOS_SD";
-			fsType = "ext4";
+		"/" = {
+				device = "/dev/disk/by-label/NIXOS_SD";
+				fsType = "ext4";
 		};
 	};
 
 	swapDevices = [ { device = "/swapfile"; size = 1024; } ];
 
-  networking.hostName = "RPi3"; 
+	networking.hostName = "RPi3";
 
 	# Allow Unfree
 	nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
-		git	
+	environment.systemPackages = with pkgs; [
+		git
 		vim
 	];
 }
