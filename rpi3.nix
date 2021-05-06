@@ -20,4 +20,14 @@
 	};
 
 	swapDevices = [ { device = "/swapfile"; size = 1024; } ];
+
+  networking.hostName = "RPi3"; 
+
+	# Allow Unfree
+	nixpkgs.config.allowUnfree = true;
+
+  environment.systemPackages = with pkgs; [
+		git	
+		vim
+	];
 }
