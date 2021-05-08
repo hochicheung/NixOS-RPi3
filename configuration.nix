@@ -3,6 +3,7 @@
 	# NixOS wants to enable GRUB by default
 	boot.loader.grub.enable = false;
 
+	# Hostname
 	networking.hostName = "raspi3";
 
 	# Enables the generation of /boot/extlinux/extlinux.conf
@@ -23,7 +24,11 @@
 		};
 	};
 
+	# Add Swap
 	swapDevices = [ { device = "/swapfile"; size = 1024; } ];
+
+	# Load wifi device
+	hardware.enableRedistributableFirmware = true;
 
 	# User Management
 	users.users.samcheung = {
@@ -58,6 +63,7 @@
 	# Allow Unfree
 	nixpkgs.config.allowUnfree = true;
 
+	# Packages
 	environment.systemPackages = with pkgs; [
 		git
 		vim
