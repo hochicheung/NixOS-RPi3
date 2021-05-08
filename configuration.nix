@@ -1,37 +1,40 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, lib, ... }:
 {
-  imports =
-    [ 
-			./rpi3.nix
-    ];
+	boot.loader.grub.enable = false;
 
-	# Don't use swap unless ram is full
-	boot.kernel.sysctl = {
-  	"vm.swappiness" = 0;
+	boot.kernelPackages = pkgs.linuxPackages_latest;
+
+	boot.kernelParams = ["cma=256M"];
+	boot.loader.raspberryPi.enable = true;
+	boot.loader.raspberryPi.version = 3;
+	boot.loader.raspberryPi.uboot.enable = true;
+	boot.loader.raspberryPi.firmwareConfig = ''
+	  gpu_mem=256
+	'';
+	environment.systemPackages = with pkgs; [
+	  raspberrypi-tools
+	];
+
+	fileSystems = {
+		"/boot" = {
+			device = "/dev/disk/by-label/NIXOS_BOOT";
+			fsType = "vfat";
+		};
+		"/" = {
+			device = "/dev/disk/by-label/NIXOS_SD";
+			fsType = "ext4";
+		};
 	};
-	services.fstrim.enable = true;
 
-	# Clean /tmp on boot
+	# Preserve space by disabling documantion and history
+	services.nixosManual.enable = false;
+	nix.gc.automatic = true;
+	nix.gc.options = "--delete-older-than 30d";
 	boot.cleanTmpDir = true;
 
-	# Time & Date
-	time.timeZone = "Europe/Stockholm";
-	services.localtime.enable = true;
-  
-  # Networking
-  networking.networkmanager.enable = true;
+	# Configure basic SSH
+	services.openssh.enable = true;
+	services.openssh.permitRootLogin = "yes";
 
-  # User Management
-  users.users.samcheung = {
-    isNormalUser = true;
-    home = "/home/samcheung";
-    extraGroups = ["wheel" "networkmanager" "video"];
-  };
-
-	# Nix garbage collector
-	nix.gc.automatic = true;
-
-	system.autoUpgrade.enable = true;
-	system.autoUpgrade.allowReboot = true;
+	swapDevices = [ { device = "/swapfile"; size = 1024; } ];
 }
