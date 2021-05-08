@@ -1,40 +1,25 @@
 { config, pkgs, lib, ... }:
 {
+	# NixOS wants to enable GRUB by default
 	boot.loader.grub.enable = false;
 
-	boot.kernelPackages = pkgs.linuxPackages_latest;
-
-	boot.kernelParams = ["cma=256M"];
-	boot.loader.raspberryPi.enable = true;
-	boot.loader.raspberryPi.version = 3;
-	boot.loader.raspberryPi.uboot.enable = true;
-	boot.loader.raspberryPi.firmwareConfig = ''
-	  gpu_mem=256
-	'';
-	environment.systemPackages = with pkgs; [
-	  raspberrypi-tools
-	];
-
+	# Enables the generation of /boot/extlinux/extlinux.conf
+	boot.loader.generic-extlinux-compatible.enable = true;
+ 
+	#	 !!! If your board is a Raspberry Pi 3, select not latest (5.8 at the time)
+	#	 !!! as it is currently broken (see https://github.com/NixOS/nixpkgs/issues/97064)
+	boot.kernelPackages = pkgs.linuxPackages;
+	
+	# !!! Needed for the virtual console to work on the RPi 3, as the default of 16M doesn't seem to be enough.
+	boot.kernelParams = ["cma=32M"];
+		
+	# File systems configuration for using the installer's partition layout
 	fileSystems = {
-		"/boot" = {
-			device = "/dev/disk/by-label/NIXOS_BOOT";
-			fsType = "vfat";
-		};
 		"/" = {
 			device = "/dev/disk/by-label/NIXOS_SD";
 			fsType = "ext4";
 		};
 	};
-
-	# Preserve space by disabling documantion and history
-	services.nixosManual.enable = false;
-	nix.gc.automatic = true;
-	nix.gc.options = "--delete-older-than 30d";
-	boot.cleanTmpDir = true;
-
-	# Configure basic SSH
-	services.openssh.enable = true;
-	services.openssh.permitRootLogin = "yes";
-
+		
 	swapDevices = [ { device = "/swapfile"; size = 1024; } ];
 }
