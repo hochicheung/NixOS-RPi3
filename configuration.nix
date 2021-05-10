@@ -68,4 +68,9 @@
 		git
 		vim
 	];
+
+	# SSH
+	services.openssh.enable = true;
+	services.openssh.permitRootLogin = true;
+	services.openssh.ports = [461];
 }
