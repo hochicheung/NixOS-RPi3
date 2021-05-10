@@ -71,6 +71,6 @@
 
 	# SSH
 	services.openssh.enable = true;
-	services.openssh.permitRootLogin = true;
+	services.openssh.permitRootLogin = "yes";
 	services.openssh.ports = [461];
 }
