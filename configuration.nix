@@ -51,7 +51,7 @@
 		
 		firewall.enable = true;
 		firewall.allowedTCPPorts = [80 443 461];
-	}
+	};
 
 	# Auto-upgrade
 	system.autoUpgrade.enable = true;
