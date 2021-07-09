@@ -46,7 +46,7 @@
 
 	# Networking
 	networking = {
-	  hostName = raspi-nix;
+	  hostName = "raspi-nix";
 	  networkmanager.enable = true;
 		
 		firewall.enable = true;
