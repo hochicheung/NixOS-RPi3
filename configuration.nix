@@ -40,10 +40,6 @@
 		extraGroups = ["wheel" "networkmanager"];
 	};
 
-	# Time & Date
-	time.timeZone = "Europe/Stockholm";
-	services.localtime.enable = true;
-
 	# Networking
 	networking = {
 	  hostName = "raspi-nix";
